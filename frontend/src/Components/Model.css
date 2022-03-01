@@ -1,0 +1,11 @@
+.imageholder {
+    height: 80vh;
+    width: 30vw;
+}
+
+@media screen and (max-width: 800px) {
+    .imageholder {
+        height: 300px;
+        width: 350px;
+    }
+}
