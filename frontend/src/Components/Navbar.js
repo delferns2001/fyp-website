@@ -23,10 +23,14 @@ function TopNavBar(props) {
     return (
         <>
             <Navbar
-                bg="primary"
-                variant="dark"
+                // bg="secondry"
+                // variant="dark"
                 expand="md"
                 className="shadow-sm"
+                style={{
+                    backgroundColor: "#FF8601",
+                    color: "#000000",
+                }}
             >
                 <Container>
                     {/* <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand> */}

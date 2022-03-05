@@ -1,6 +1,6 @@
 // import "./App.css";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import React from "react";
+import React, { useState } from "react";
 import { Button, Container } from "react-bootstrap";
 
 import Model from "./Components/Model";
@@ -15,9 +15,13 @@ import useToken from "./Components/useToken";
 import Header from "./Components/Header";
 import Profile from "./Components/Profile";
 import { ProtectedRoutes } from "./Components/ProtectedRoutes";
+import { UserContext } from "./Components/UserContext";
 
 function App() {
     const { token, removeToken, setToken } = useToken();
+    const [user, setUser] = useState();
+
+    // const { user, getUser, saveUser } = useUser();
 
     // return (
     //     <Router>
@@ -56,52 +60,68 @@ function App() {
 
     return (
         <BrowserRouter>
-            <div className="App">
-                <TopNavBar token={token} removeToken={removeToken} />
-                <Routes>
-                    {/* <Route
+            <UserContext.Provider value={{ user, setUser }}>
+                <div
+                    className="App"
+                    style={{ minHeight: "100vh", backgroundColor: "#EE9D47" }}
+                >
+                    <TopNavBar token={token} removeToken={removeToken} />
+                    <Routes>
+                        {/* <Route
                         path="/login-form"
                         element={<LoginForm setToken={setToken} />}
                     ></Route> */}
-                    <Route path="/" element={<Homepage />}></Route>
-                    <Route path="/signup-form" element={<SignUpForm />}></Route>
-                    <Route path="/classify" element={<Model />}></Route>
-
-                    {token === null ? (
+                        <Route path="/" element={<Homepage />}></Route>
                         <Route
-                            path="/login-form"
-                            element={<LoginForm />}
-                        ></Route>
-                    ) : (
-                        <Route
-                            path="/login-form"
-                            element={<Homepage />}
-                        ></Route>
-                    )}
-
-                    <Route element={<ProtectedRoutes token={token} />}>
-                        <Route
-                            exact
-                            path="/profile"
+                            path="/signup-form"
                             element={
-                                <>
-                                    <Header token={removeToken} />
-
-                                    <Profile
-                                        token={token}
-                                        setToken={setToken}
-                                    />
-                                </>
+                                <SignUpForm
+                                    setToken={setToken}
+                                    // saveUser={saveUser}
+                                />
                             }
                         ></Route>
-                        <Route
-                            path="/contact-me"
-                            element={<Backendfetch />}
-                        ></Route>
-                    </Route>
-                </Routes>
-                {/* <Button onClick={() => console.log(token)}>print token</Button> */}
-                {/* <Routes>
+                        <Route path="/classify" element={<Model />}></Route>
+
+                        {token === null ? (
+                            <Route
+                                path="/login-form"
+                                element={
+                                    <LoginForm
+                                    // user={user}
+                                    // saveUser={saveUser}
+                                    />
+                                }
+                            ></Route>
+                        ) : (
+                            <Route
+                                path="/login-form"
+                                element={<Homepage />}
+                            ></Route>
+                        )}
+
+                        <Route element={<ProtectedRoutes token={token} />}>
+                            <Route
+                                exact
+                                path="/profile"
+                                element={
+                                    <>
+                                        <Profile
+                                            // user={getUser()}
+                                            token={token}
+                                            setToken={setToken}
+                                        />
+                                    </>
+                                }
+                            ></Route>
+                            <Route
+                                path="/contact-me"
+                                element={<Backendfetch />}
+                            ></Route>
+                        </Route>
+                    </Routes>
+                    {/* <Button onClick={() => console.log(token)}>print token</Button> */}
+                    {/* <Routes>
                     {!token && token !== "" && token !== undefined ? (
                         <Route
                             path="/login-form"
@@ -144,7 +164,8 @@ function App() {
                         </>
                     )}
                 </Routes> */}
-            </div>
+                </div>
+            </UserContext.Provider>
         </BrowserRouter>
     );
 }

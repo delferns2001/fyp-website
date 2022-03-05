@@ -1,53 +1,87 @@
+from ast import Try
 import json
 from flask import Flask, request, jsonify
 from datetime import datetime, timedelta, timezone
-from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, \
-    unset_jwt_cookies, jwt_required, JWTManager
+
+from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+
 # https://dev.to/nagatodev/how-to-add-login-authentication-to-a-flask-and-react-application-23i7
 
-api = Flask(__name__)
-
-api.config["JWT_SECRET_KEY"] = "please-remember-to-change-me"
-api.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
-jwt = JWTManager(api)
+def __repr__(self):
+    return '<name ->  %r>' % self.name
 
 
-@api.route("/")
+app = Flask(__name__)
+
+
+app.config["JWT_SECRET_KEY"] = "please-remember-to-change-me"
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///appdb.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
+jwt = JWTManager(app)
+db = SQLAlchemy(app)
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    surname = db.Column(db.String(80))
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(120), nullable=False)
+    dateCreated = db.Column(db.DateTime, default=datetime.now)
+
+
+@app.route("/")
 def home():
     return "Home"
 
 
-@api.route('/token', methods=["POST"])
+@app.route('/login', methods=["POST"])
 def create_token():
-    email = request.json.get("email", None)
+    emailr = request.json.get("email", None)
     password = request.json.get("password", None)
-    if email != "test" or password != "test":
-        return {"msg": "Wrong email or password"}, 401
+    user = User.query.filter_by(email=emailr).first()
 
-    access_token = create_access_token(identity=email)
-    response = {"access_token": access_token}
-    return response
+    try:
+        if user.email != emailr or user.password != password:
+            return {"msg": "Wrong email or password"}, 401
+
+        access_token = create_access_token(identity=emailr)
+        response = {"access_token": access_token,
+                    "name": user.name,
+                    "surname": user.surname,
+                    "email": user.email,
+                    "password": user.password}
+        return response
+    except:
+        return {"msg": "Email Doesn't Exist"}, 401
 
 
-@api.route('/profile')
+@app.route('/profile', methods=["GET"])
 @jwt_required()  # new line
 def my_profile():
+    email = request.json.get("email", None)
+    user = User.query.filter_by(email=email).first()
+
     response_body = {
-        "name": "Nagato",
+        "Full Name": user.name + user.surname + " ",
         "about": "Hello! I'm a full stack developer that loves python and javascript"
     }
 
     return response_body
 
 
-@api.route("/logout", methods=["POST"])
+@app.route("/logout", methods=["POST"])
 def logout():
     response = jsonify({"msg": "logout successful"})
     unset_jwt_cookies(response)
     return response
 
 
-@api.after_request
+@app.after_request
 def refresh_expiring_jwts(response):
     try:
         exp_timestamp = get_jwt()["exp"]
@@ -65,10 +99,23 @@ def refresh_expiring_jwts(response):
         return response
 
 
-@api.route("/members")
+@app.route("/signup", methods=["POST"])
+def create_user():
+    name = request.json.get("name", None)
+    surname = request.json.get("surname", None)
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
+    newUser = User(name=name, surname=surname,
+                   email=email, password=password)
+    db.session.add(newUser)
+    db.session.commit()
+    return ("user added")
+
+
+@app.route("/members")
 def members():
     return{"members": ["Delton", "Davina", "Socorro"]}
 
 
 if __name__ == "__main__":
-    api.run(debug=True)
+    app.run(debug=True)

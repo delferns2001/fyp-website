@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import {
     Button,
@@ -14,16 +14,21 @@ import {
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useToken from "./useToken";
+import Feedback from "react-bootstrap/esm/Feedback";
+import UserContext from "./UserContext";
+
 const eye = <FontAwesomeIcon icon={faEye} />;
 
 const StatusEnum = Object.freeze({
     INIT: 1,
     LOADING: 2,
     SUCCESS: 3,
+    Error: 4,
 });
 
 function LoginForm(props) {
     const { token, removeToken, setToken } = useToken();
+    // const { user, saveUser } = useUser();
 
     const [loginForm, setloginForm] = useState({
         email: "",
@@ -45,17 +50,21 @@ function LoginForm(props) {
     }
 
     const handleSubmit = (event) => {
+        setStatus(StatusEnum.LOADING);
         axios({
             method: "POST",
-            url: "/token",
+            url: "/login",
             data: {
-                email: loginForm.email,
+                email: loginForm.email.toLowerCase(),
                 password: loginForm.password,
             },
         })
             .then((response) => {
-                console.log(response.data.access_token);
                 setToken(response.data.access_token);
+                // saveUser(response.data);
+                console.log(response.data);
+                // console.log(user);
+
                 window.location.reload(true);
             })
             .catch((error) => {
@@ -63,6 +72,7 @@ function LoginForm(props) {
                     console.log(error.response);
                     console.log(error.response.status);
                     console.log(error.response.headers);
+                    setStatus(StatusEnum.ERROR);
                 }
             });
 
@@ -71,22 +81,29 @@ function LoginForm(props) {
         //     password: "",
         // });
 
-        // event.preventDefault();
+        event.preventDefault();
     };
 
     return (
-        <>
-            <Row className="border-bottom mt-5">
+        <div onSubmit={() => handleSubmit()}>
+            <Row className="border-bottom mt-5 gx-0">
                 <Container className="d-flex justify-content-center mb-5 px-0">
                     <Col className="px-3" style={{ maxWidth: 460 }}>
-                        <h1 className="mb-0">Login</h1>{" "}
+                        <h1 className="mb-0">Login</h1>
                     </Col>
                 </Container>
             </Row>
 
-            <Row className="d-flex justify-content-center py-4 my-2">
+            <Row className="d-flex justify-content-center py-4 my-2 gx-0">
                 <Col className="px-3" style={{ maxWidth: 460 }}>
                     <Form onSubmit={handleSubmit}>
+                        {status === StatusEnum.ERROR ? (
+                            <label style={{ color: "red" }}>
+                                Please make sure details entered are correct
+                            </label>
+                        ) : (
+                            <label></label>
+                        )}
                         <Form.Group className="mb-3">
                             <Form.Label>Email address: </Form.Label>
                             <Form.Control
@@ -107,8 +124,8 @@ function LoginForm(props) {
                                     required
                                     type={
                                         showPassword === true
-                                            ? "password"
-                                            : "text"
+                                            ? "text"
+                                            : "password"
                                     }
                                     placeholder="Password"
                                     name="password"
@@ -135,13 +152,13 @@ function LoginForm(props) {
                                 ? "Loading..."
                                 : "Sign In"}
                         </Button>
-                        <Button onClick={() => console.log(token)}>
+                        {/* <Button onClick={() => console.log(token)}>
                             print token
-                        </Button>
+                        </Button> */}
                     </Form>
                 </Col>
             </Row>
-        </>
+        </div>
     );
 }
 

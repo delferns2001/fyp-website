@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import {
     Button,
     Form,
@@ -10,11 +11,22 @@ import {
     Row,
 } from "react-bootstrap";
 
+import useToken from "./useToken";
+import Feedback from "react-bootstrap/esm/Feedback";
+import UserContext from "./UserContext";
+
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const eye = <FontAwesomeIcon icon={faEye} />;
 
-function SignUpForm() {
+const StatusEnum = Object.freeze({
+    INIT: 1,
+    LOADING: 2,
+    SUCCESS: 3,
+    Error: 4,
+});
+
+function SignUpForm(props) {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -22,6 +34,7 @@ function SignUpForm() {
     const [repeatPassword, setRepeatPassword] = useState("");
     const [showPassword, setShowPassword] = useState(true);
     const [showRepeatPassword, setShowRepeatPassword] = useState(true);
+    const [status, setStatus] = useState(StatusEnum.INIT);
 
     function validateForm() {
         return (
@@ -33,8 +46,38 @@ function SignUpForm() {
     }
 
     const handleSubmit = (event) => {
-        console.log(email);
-        console.log(password);
+        setStatus(StatusEnum.LOADING);
+        axios({
+            method: "POST",
+            url: "/signup",
+            data: {
+                name: firstName,
+                surname: lastName,
+                email: email.toLowerCase(),
+                password: password,
+            },
+        })
+            .then((response) => {
+                props.setToken(response.data.access_token);
+                props.saveUser(response.data);
+                console.log(response.data);
+                window.location.assign("./");
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error.response);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                    setStatus(StatusEnum.ERROR);
+                }
+            });
+
+        // setloginForm({
+        //     email: "",
+        //     password: "",
+        // });
+
+        event.preventDefault();
     };
 
     return (

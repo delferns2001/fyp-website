@@ -1,12 +1,20 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
+import { UserContext } from "./UserContext";
 
 function Profile(props) {
     const [profileData, setProfileData] = useState(null);
+    // const { user, saveUser, getUser } = useUser();
+
     function getData() {
+        // user = getUser();
+        // console.log(user);
         axios({
             method: "GET",
             url: "/profile",
+            data: {
+                email: props.user.email.toLowerCase(),
+            },
             headers: {
                 Authorization: "Bearer " + props.token,
             },

@@ -98,7 +98,7 @@ export default function Model() {
     return (
         <Row
             style={{
-                backgroundColor: "cyan",
+                backgroundColor: "#EE9D47",
                 minHeight: "110vh",
                 maxWidth: "inherit",
                 paddingTop: "10vh",
