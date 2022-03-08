@@ -1,21 +1,21 @@
+import { useContext } from "react";
 import { Outlet } from "react-router-dom";
 import LoginForm from "./LoginForm";
+import UserContext from "./UserContext";
 
-const useAuth = (props) => {
-    console.log(props);
+const useAuth = () => {
+    const { token } = useContext(UserContext);
+
+    console.log();
     const user = {
-        loggedin:
-            props.token !== null &&
-            props.token !== "" &&
-            props.token !== undefined,
+        loggedin: token !== null && token !== "" && token !== undefined,
     };
-    console.log(props.token);
+    console.log(token);
     console.log(user.loggedin);
     return user && user.loggedin;
 };
 
 const ProtectedRoutes = (props) => {
-    console.log(props);
     const isAuth = useAuth(props);
     return isAuth ? <Outlet /> : <LoginForm></LoginForm>;
 };

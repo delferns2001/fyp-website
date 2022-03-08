@@ -1,30 +1,15 @@
 import { Button } from "bootstrap";
+import { useContext } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { useAuth } from "./ProtectedRoutes";
-import useToken from "./useToken";
+import UserContext from "./UserContext";
 
-function TopNavBar(props) {
-    // const isAuth = useAuth();
-    // window.onscroll = function () {
-    //     scrollFunction();
-    // };
-
-    // function scrollFunction() {
-    //     if (
-    //         document.body.scrollTop > 50 ||
-    //         document.documentElement.scrollTop > 50
-    //     ) {
-    //         document.getElementById("header").style.fontSize = "10px";
-    //     } else {
-    //         document.getElementById("header").style.fontSize = "20px";
-    //     }
-    // }
+function TopNavBar() {
+    const { token, removeToken } = useContext(UserContext);
 
     return (
         <>
             <Navbar
-                // bg="secondry"
-                // variant="dark"
                 expand="md"
                 className="shadow-sm"
                 style={{
@@ -53,12 +38,15 @@ function TopNavBar(props) {
                         <Nav
                             style={{
                                 position: "absolute",
-                                // top: "0px",
                                 right: "15px",
                             }}
                         >
-                            {props.token !== null ? (
-                                <Nav.Link onClick={() => props.removeToken()}>
+                            {token !== null && token !== undefined ? (
+                                <Nav.Link
+                                    onClick={() => removeToken()}
+                                    href="/login-form"
+                                    class="nav-link"
+                                >
                                     Logout
                                 </Nav.Link>
                             ) : (

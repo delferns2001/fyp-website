@@ -4,26 +4,25 @@ import { UserContext } from "./UserContext";
 
 function Profile(props) {
     const [profileData, setProfileData] = useState(null);
-    // const { user, saveUser, getUser } = useUser();
+    const { user, token, saveToken } = useContext(UserContext);
 
     function getData() {
-        // user = getUser();
-        // console.log(user);
+        console.log("email: " + user.email);
+        console.log("token: " + token);
         axios({
             method: "GET",
             url: "/profile",
-            data: {
-                email: props.user.email.toLowerCase(),
-            },
+
             headers: {
-                Authorization: "Bearer " + props.token,
+                Authorization: "Bearer " + token,
             },
         })
             .then((response) => {
+                console.log(response.data);
                 const res = response.data;
-                res.access_token && props.setToken(res.access_token);
+                res.access_token && saveToken(res.access_token);
                 setProfileData({
-                    profile_name: res.name,
+                    profile_name: res.fullName,
                     about_me: res.about,
                 });
             })
@@ -39,7 +38,7 @@ function Profile(props) {
     return (
         <div className="Profile">
             <p>To get your profile details: </p>
-            <button onClick={getData}>Click me</button>
+            <button onClick={() => getData()}>Click me</button>
             {profileData && (
                 <div>
                     <p>Profile name: {profileData.profile_name}</p>

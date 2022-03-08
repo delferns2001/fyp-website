@@ -13,9 +13,7 @@ import {
 
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import useToken from "./useToken";
-import Feedback from "react-bootstrap/esm/Feedback";
-import UserContext from "./UserContext";
+import { UserContext } from "./UserContext";
 
 const eye = <FontAwesomeIcon icon={faEye} />;
 
@@ -26,9 +24,8 @@ const StatusEnum = Object.freeze({
     Error: 4,
 });
 
-function LoginForm(props) {
-    const { token, removeToken, setToken } = useToken();
-    // const { user, saveUser } = useUser();
+function LoginForm() {
+    const { signIn, saveToken, user, token } = useContext(UserContext);
 
     const [loginForm, setloginForm] = useState({
         email: "",
@@ -50,6 +47,7 @@ function LoginForm(props) {
     }
 
     const handleSubmit = (event) => {
+        console.log("login called");
         setStatus(StatusEnum.LOADING);
         axios({
             method: "POST",
@@ -60,11 +58,14 @@ function LoginForm(props) {
             },
         })
             .then((response) => {
-                setToken(response.data.access_token);
-                // saveUser(response.data);
+                try {
+                    saveToken(response.data.access_token);
+                    signIn(JSON.stringify(response.data));
+                } catch (error) {
+                    console.log(error);
+                }
+                console.log(JSON.parse(localStorage.getItem("user")));
                 console.log(response.data);
-                // console.log(user);
-
                 window.location.reload(true);
             })
             .catch((error) => {

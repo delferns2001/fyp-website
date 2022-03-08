@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import {
     Button,
@@ -11,7 +11,6 @@ import {
     Row,
 } from "react-bootstrap";
 
-import useToken from "./useToken";
 import Feedback from "react-bootstrap/esm/Feedback";
 import UserContext from "./UserContext";
 
@@ -35,6 +34,7 @@ function SignUpForm(props) {
     const [showPassword, setShowPassword] = useState(true);
     const [showRepeatPassword, setShowRepeatPassword] = useState(true);
     const [status, setStatus] = useState(StatusEnum.INIT);
+    const { signin } = useContext(UserContext);
 
     function validateForm() {
         return (
@@ -52,15 +52,13 @@ function SignUpForm(props) {
             url: "/signup",
             data: {
                 name: firstName,
-                surname: lastName,
+                lastname: lastName,
                 email: email.toLowerCase(),
                 password: password,
             },
         })
             .then((response) => {
-                props.setToken(response.data.access_token);
-                props.saveUser(response.data);
-                console.log(response.data);
+                console.log(response);
                 window.location.assign("./");
             })
             .catch((error) => {

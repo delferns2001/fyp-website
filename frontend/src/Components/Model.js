@@ -103,15 +103,17 @@ export default function Model() {
                 maxWidth: "inherit",
                 paddingTop: "10vh",
             }}
+            className="gx-0"
         >
-            <Col>
+            <Col style={{ paddingInline: "5vw" }}>
                 <Container>
                     <div
                         className="imageholder"
                         style={{
                             borderColor: "black",
                             borderStyle: "solid",
-                            // backgroundColor: "black"
+                            height: "80vh",
+                            width: "30vw",
                         }}
                     >
                         {imageURL && (
@@ -129,10 +131,16 @@ export default function Model() {
                     </div>
                 </Container>
             </Col>
-            <Col>
-                <Container
-                    style={{ paddingTop: "10vh", paddingBottom: "10vh" }}
-                >
+            <Col
+                class="gx-0"
+                style={{
+                    paddingInline: "5vw",
+                    minHeight: "80vh",
+                    minWidth: "30vw",
+                }}
+            >
+                <Card style={{ backgroundColor: "#FF8601" }}>
+                    {/* style={{ paddingTop: "10vh", paddingBottom: "10vh" }}> */}
                     <section>
                         <h1>Garbage Classifier Application</h1>
                         <p>
@@ -144,7 +152,6 @@ export default function Model() {
                             eiusmod laboris ipsum eu ut Lorem mollit.
                         </p>
                     </section>
-
                     <input
                         type="file"
                         accept="image/*"
@@ -153,20 +160,28 @@ export default function Model() {
                         ref={fileInputRef}
                         style={{ paddingTop: "10vh " }}
                     />
-                </Container>
-                <Container>
-                    <div style={{ borderColor: "black", borderStyle: "solid" }}>
+
+                    {imageURL && (
+                        <button onClick={identify}>Identify Image</button>
+                    )}
+
+                    <Card
+                        style={{
+                            backgroundColor: "#FF8601",
+                            height: "40vh",
+                            width: "inherit",
+                            padding: "10vh",
+                        }}
+                    >
                         <div key={results}>
                             <h3>
                                 Results: <span>{results}</span>
                             </h3>
                         </div>
-                        {imageURL && (
-                            <button onClick={identify}>Identify Image</button>
-                        )}
-                    </div>
-                </Container>
+                    </Card>
+                </Card>
             </Col>
+
             {/* <Container>
                 <Row>
                     {history.map((image) => (

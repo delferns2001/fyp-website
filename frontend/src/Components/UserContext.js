@@ -1,34 +1,63 @@
-// import { useState, useEffect } from "react";
+import React, { useEffect, useState, createContext } from "react";
 
-// function useUser() {
-//     const [user, setUser] = useState(getUser());
+export const UserContext = createContext({});
 
-//     function getUser() {
-//         const User = localStorage.getItem("user");
-//         return User && User;
-//     }
+const initialformdata = {
+    name: "",
+    surname: "",
+    email: "",
+    password: "",
+    token: "",
+};
 
-//     function saveUser(user) {
-//         localStorage.setItem("user", user);
-//         setUser(user);
-//     }
+const UserProvider = ({ children }) => {
+    const [user, setUser] = useState(initialformdata);
+    const [token, setToken] = useState();
 
-//     useEffect(() => {
-//         // on first load
-//         // to-do: look up session id, and check with the back-end if not expired
+    const saveToken = (userToken) => {
+        console.log("token added");
+        setToken(userToken);
+        localStorage.setItem("token", userToken);
+    };
 
-//         const currentUser = localStorage.removeItem("user");
-//     }, []);
+    const removeToken = () => {
+        setToken();
+        console.log("token removed");
+        localStorage.removeItem("token");
+    };
 
-//     return {
-//         user,
-//         saveUser: saveUser,
-//         getUser: getUser,
-//     };
-// }
+    const signIn = (userData) => {
+        console.log("user added");
+        setUser(userData);
+        localStorage.setItem("user", userData);
+    };
 
-// export default useUser;
+    const signOut = () => {
+        console.log("user removed");
+        setUser({});
+        localStorage.removeItem("user");
+    };
 
-import { createContext } from "react";
+    useEffect(() => {
+        const currentUser = localStorage.getItem("user");
+        if (currentUser) {
+            setUser(JSON.parse(currentUser));
+        }
+        const currentToken = localStorage.getItem("token");
+        if (currentToken) {
+            setToken(currentToken);
+        }
+        console.log(currentUser, currentToken);
+    }, []);
 
-export const UserContext = createContext(null);
+    return (
+        <UserContext.Provider
+            value={{ user, token, signIn, signOut, saveToken, removeToken }}
+        >
+            {children}
+        </UserContext.Provider>
+    );
+};
+
+export default UserContext;
+export { UserProvider };
