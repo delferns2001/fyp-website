@@ -47,7 +47,6 @@ function LoginForm() {
     }
 
     const handleSubmit = (event) => {
-        console.log("login called");
         setStatus(StatusEnum.LOADING);
         axios({
             method: "POST",
@@ -64,8 +63,8 @@ function LoginForm() {
                 } catch (error) {
                     console.log(error);
                 }
-                console.log(JSON.parse(localStorage.getItem("user")));
-                console.log(response.data);
+                // console.log(JSON.parse(localStorage.getItem("user")));
+                // console.log(response.data);
                 window.location.reload(true);
             })
             .catch((error) => {
@@ -82,7 +81,7 @@ function LoginForm() {
         //     password: "",
         // });
 
-        event.preventDefault();
+        // event.preventDefault();
     };
 
     return (

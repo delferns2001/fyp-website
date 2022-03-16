@@ -1,5 +1,5 @@
 // import "./App.css";
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
 import React, { useState, useEffect, useContext } from "react";
 
 import Model from "./Components/Model";
@@ -13,6 +13,7 @@ import SignUpForm from "./Components/Signupform";
 import Profile from "./Components/Profile";
 import { ProtectedRoutes } from "./Components/ProtectedRoutes";
 import UserContext from "./Components/UserContext";
+import CarbonFootprintCalc from "./Components/CarbonFootprintCalc";
 
 function App() {
     const { user, token } = useContext(UserContext);
@@ -27,6 +28,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Homepage />}></Route>
                     <Route path="/classify" element={<Model />}></Route>
+                    <Route path="*" element={<Navigate to="/" replace />} />
 
                     {token === null || token === undefined ? (
                         <>
@@ -63,8 +65,8 @@ function App() {
                             }
                         ></Route>
                         <Route
-                            path="/contact-me"
-                            element={<Backendfetch />}
+                            path="/carbonfootprintcalc"
+                            element={<CarbonFootprintCalc />}
                         ></Route>
                     </Route>
                 </Routes>

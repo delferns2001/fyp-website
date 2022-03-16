@@ -6,12 +6,9 @@ import UserContext from "./UserContext";
 const useAuth = () => {
     const { token } = useContext(UserContext);
 
-    console.log();
     const user = {
         loggedin: token !== null && token !== "" && token !== undefined,
     };
-    console.log(token);
-    console.log(user.loggedin);
     return user && user.loggedin;
 };
 

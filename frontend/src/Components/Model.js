@@ -5,6 +5,9 @@ import { useState, useRef, useEffect } from "react";
 import { image } from "@tensorflow/tfjs";
 import { Container, Card, Button, Row, Col, Figure } from "react-bootstrap";
 import "./Model.css";
+import axios from "axios";
+import { useContext } from "react";
+import UserContext from "./UserContext";
 
 export default function Model() {
     const [isModelLoading, setIsModelLoading] = useState(false);
@@ -13,6 +16,7 @@ export default function Model() {
     const [results, setResults] = useState([]);
     const [history, setHistory] = useState([]);
     const [probability, setProbability] = useState([]);
+    const { token } = useContext(UserContext);
 
     const imageRef = useRef();
     const fileInputRef = useRef();
@@ -77,6 +81,12 @@ export default function Model() {
         const prob = await model.predict(tensor).reshape([6]).array();
         setProbability(prob);
         tf.reshape(prob, [6]);
+
+        const values = [0, 0, 0, 0, 0, 0];
+        values[indexOfMax(prob)] = 1;
+        console.log(values);
+        updatestats(values);
+
         console.log(labels[indexOfMax(prob)]);
         setResults(labels[indexOfMax(prob)]);
     };
@@ -95,6 +105,37 @@ export default function Model() {
         return <p>Model Loading...</p>;
     }
 
+    const updatestats = (prob) => {
+        console.log(prob);
+
+        axios({
+            method: "POST",
+            url: "/updatestats",
+            data: {
+                metal: prob[2],
+                glass: prob[1],
+                cardboard: prob[0],
+                paper: prob[3],
+                trash: prob[5],
+                plastic: prob[4],
+            },
+
+            headers: {
+                Authorization: "Bearer " + token,
+            },
+        })
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log(error.response);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                }
+            });
+    };
+
     return (
         <Row
             style={{
@@ -110,6 +151,7 @@ export default function Model() {
                     <div
                         className="imageholder"
                         style={{
+                            backgroundColor: "#ff8601",
                             borderColor: "black",
                             borderStyle: "solid",
                             height: "80vh",

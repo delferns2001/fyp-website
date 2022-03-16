@@ -25,7 +25,7 @@ const StatusEnum = Object.freeze({
     Error: 4,
 });
 
-function SignUpForm(props) {
+function SignUpForm() {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -36,25 +36,17 @@ function SignUpForm(props) {
     const [status, setStatus] = useState(StatusEnum.INIT);
     const { signin } = useContext(UserContext);
 
-    function validateForm() {
-        return (
-            firstName > 1 &&
-            lastName > 1 &&
-            email.length > 0 &&
-            password == repeatPassword
-        );
-    }
-
     const handleSubmit = (event) => {
         setStatus(StatusEnum.LOADING);
         axios({
             method: "POST",
             url: "/signup",
             data: {
-                name: firstName,
+                firstname: firstName,
                 lastname: lastName,
                 email: email.toLowerCase(),
                 password: password,
+                carbon_footprint_score: "0",
             },
         })
             .then((response) => {
@@ -187,7 +179,6 @@ function SignUpForm(props) {
                             variant="primary"
                             type="submit"
                             className="w-100 mt-3"
-                            disabled={!validateForm}
                         >
                             SignUp
                         </Button>

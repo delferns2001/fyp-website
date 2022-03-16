@@ -31,8 +31,11 @@ function TopNavBar() {
                             <Nav.Link href="/classify" className="nav-link">
                                 Classify
                             </Nav.Link>
-                            <Nav.Link href="/contact-me" className="nav-link">
-                                Contact Me
+                            <Nav.Link
+                                href="/carbonfootprintcalc"
+                                className="nav-link"
+                            >
+                                Carbon Footprint Calculator
                             </Nav.Link>
                         </Nav>
                         <Nav

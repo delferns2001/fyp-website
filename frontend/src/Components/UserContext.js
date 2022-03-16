@@ -3,11 +3,10 @@ import React, { useEffect, useState, createContext } from "react";
 export const UserContext = createContext({});
 
 const initialformdata = {
-    name: "",
-    surname: "",
+    firstname: "",
+    lastname: "",
     email: "",
-    password: "",
-    token: "",
+    carbon_footprint_score: "",
 };
 
 const UserProvider = ({ children }) => {
@@ -28,7 +27,13 @@ const UserProvider = ({ children }) => {
 
     const signIn = (userData) => {
         console.log("user added");
-        setUser(userData);
+        try {
+            setUser(JSON.parse(userData));
+        } catch (error) {
+            console.log(error);
+            setUser(userData);
+        }
+
         localStorage.setItem("user", userData);
     };
 
@@ -47,7 +52,6 @@ const UserProvider = ({ children }) => {
         if (currentToken) {
             setToken(currentToken);
         }
-        console.log(currentUser, currentToken);
     }, []);
 
     return (
