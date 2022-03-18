@@ -27,7 +27,6 @@ function App() {
                 <TopNavBar />
                 <Routes>
                     <Route path="/" element={<Homepage />}></Route>
-                    <Route path="/classify" element={<Model />}></Route>
                     <Route path="*" element={<Navigate to="/" replace />} />
 
                     {token === null || token === undefined ? (
@@ -58,16 +57,13 @@ function App() {
                         <Route
                             exact
                             path="/profile"
-                            element={
-                                <>
-                                    <Profile />
-                                </>
-                            }
+                            element={<Profile />}
                         ></Route>
                         <Route
                             path="/carbonfootprintcalc"
                             element={<CarbonFootprintCalc />}
                         ></Route>
+                        <Route path="/classify" element={<Model />}></Route>
                     </Route>
                 </Routes>
             </div>

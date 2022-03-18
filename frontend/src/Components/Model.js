@@ -21,7 +21,7 @@ export default function Model() {
     const imageRef = useRef();
     const fileInputRef = useRef();
 
-    const labels = ["cardboard", "glass", "metal", "paper", "plastic", "trash"];
+    const labels = ["Cardboard", "Glass", "Metal", "Paper", "Plastic", "Trash"];
 
     const loadModel = async () => {
         setIsModelLoading(true);
@@ -33,6 +33,7 @@ export default function Model() {
             setIsModelLoading(false);
         } catch (error) {
             console.log(error);
+            return <div>Error Loading the model </div>;
             setIsModelLoading(false);
         }
     };
@@ -139,41 +140,242 @@ export default function Model() {
     return (
         <Row
             style={{
-                backgroundColor: "#EE9D47",
-                minHeight: "110vh",
-                maxWidth: "inherit",
-                paddingTop: "10vh",
+                padding: "10vh",
             }}
             className="gx-0"
         >
-            <Col style={{ paddingInline: "5vw" }}>
-                <Container>
-                    <div
-                        className="imageholder"
-                        style={{
-                            backgroundColor: "#ff8601",
-                            borderColor: "black",
-                            borderStyle: "solid",
-                            height: "80vh",
-                            width: "30vw",
-                        }}
-                    >
-                        {imageURL && (
-                            <img
-                                src={imageURL}
-                                alt="Upload Preview"
-                                crossOrigin="anonymous"
-                                ref={imageRef}
-                                style={{
-                                    height: "inherit",
-                                    width: "inherit",
-                                }}
-                            />
-                        )}
-                    </div>
+            <Col
+                lg={4}
+                className="textcenter"
+                style={{
+                    minHeight: "80vh",
+                    display: "flex",
+                    justifyContent: "center",
+                    flexWrap: "wrap",
+                }}
+            >
+                <Container
+                    style={{
+                        borderStyle: "solid",
+                        display: "flex",
+                        justifyContent: "center",
+                    }}
+                >
+                    {imageURL && (
+                        <img
+                            src={imageURL}
+                            alt="Upload Preview"
+                            crossOrigin="anonymous"
+                            ref={imageRef}
+                            style={{
+                                height: "inherit",
+                                width: "inherit",
+                            }}
+                        />
+                    )}
                 </Container>
             </Col>
+
             <Col
+                lg={8}
+                style={{
+                    paddingInline: "5vw",
+                    minHeight: "80vh",
+                }}
+            >
+                <Container
+                    style={{
+                        borderStyle: "solid",
+                        height: "80vh",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-evenly",
+                    }}
+                >
+                    <Container style={{ padding: "10px", textAlign: "center" }}>
+                        <h1>Garbage Classifier Application</h1>
+                        <p>
+                            Ullamco ullamco duis reprehenderit veniam consequat
+                            est cupidatat pariatur. Cillum fugiat ad
+                            exercitation consectetur mollit Lorem sit aliqua
+                            incididunt commodo aliqua nulla qui. Ea cillum
+                            cupidatat labore dolor. Veniam consectetur ea
+                            eiusmod laboris ipsum eu ut Lorem mollit.
+                        </p>
+                    </Container>
+
+                    <Container
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <input
+                            type="file"
+                            accept="image/*"
+                            capture="camera"
+                            onChange={uploadImage}
+                            ref={fileInputRef}
+                        />
+                        {imageURL && (
+                            <button onClick={identify}>Identify Image</button>
+                        )}
+                    </Container>
+                    <Container
+                        style={{
+                            padding: "20px",
+                        }}
+                    >
+                        <div
+                            style={{
+                                borderStyle: "solid",
+                                borderColor: "black",
+                                minHeight: "35vh",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-around",
+                            }}
+                        >
+                            <div style={{ padding: "10px" }}>
+                                <h5>
+                                    Your item is identified to be:{" "}
+                                    <span>{results}</span>
+                                </h5>
+                                {(() => {
+                                    if (results === "Plastic") {
+                                        return (
+                                            <div className="iconContainer">
+                                                <img
+                                                    src="./plastic.png"
+                                                    height="100vh"
+                                                ></img>
+                                            </div>
+                                        );
+                                    } else if (results === "Paper") {
+                                        return (
+                                            <div className="iconContainer">
+                                                <img
+                                                    src="./paper.png"
+                                                    height="100vh"
+                                                ></img>
+                                            </div>
+                                        );
+                                    } else if (results === "Glass") {
+                                        return (
+                                            <div className="iconContainer">
+                                                <img
+                                                    src="./glass.png"
+                                                    height="100vh"
+                                                ></img>
+                                            </div>
+                                        );
+                                    } else if (results === "Cardboard") {
+                                        return (
+                                            <div className="iconContainer">
+                                                <img
+                                                    src="./cardboard.png"
+                                                    height="100vh"
+                                                ></img>
+                                            </div>
+                                        );
+                                    } else if (results === "Metal") {
+                                        return (
+                                            <div className="iconContainer">
+                                                <img
+                                                    src="./metal.png"
+                                                    height="100vh"
+                                                ></img>
+                                            </div>
+                                        );
+                                    } else if (results === "Trash") {
+                                        return (
+                                            <div className="iconContainer">
+                                                <img
+                                                    src="./trash.png"
+                                                    height="100vh"
+                                                ></img>
+                                            </div>
+                                        );
+                                    } else {
+                                        return <div></div>;
+                                    }
+                                })()}
+                            </div>
+
+                            {(() => {
+                                if (results === "Plastic") {
+                                    return (
+                                        <div className="binContainer">
+                                            Plastic waste should be recycled in
+                                            green bins
+                                            <img src="./green.png"></img>
+                                        </div>
+                                    );
+                                } else if (results === "Paper") {
+                                    return (
+                                        <div className="binContainer">
+                                            <p>
+                                                {" "}
+                                                Paper waste should be recycled
+                                                in blue bins
+                                            </p>
+                                            <img src="./blue.png"></img>
+                                        </div>
+                                    );
+                                } else if (results === "Glass") {
+                                    return (
+                                        <div className="binContainer">
+                                            <p>
+                                                Glass waste should be recycled
+                                                in red bins
+                                            </p>
+                                            <img src="./red.png"></img>
+                                        </div>
+                                    );
+                                } else if (results === "Cardboard") {
+                                    return (
+                                        <div className="binContainer">
+                                            <p>
+                                                Cardboard waste should be
+                                                recycled in blue bins
+                                            </p>
+                                            <img src="./blue.png"></img>
+                                        </div>
+                                    );
+                                } else if (results === "Metal") {
+                                    return (
+                                        <div className="binContainer">
+                                            <p>
+                                                Metal waste should be recycled
+                                                in green bins
+                                            </p>
+                                            <img src="./green.png"></img>
+                                        </div>
+                                    );
+                                } else if (results === "Trash") {
+                                    return (
+                                        <div className="binContainer">
+                                            <p>
+                                                General Waste should be recycled
+                                                in black bins
+                                            </p>
+                                            <img src="./black.jpg"></img>
+                                        </div>
+                                    );
+                                } else {
+                                    return (
+                                        <div>
+                                            Please Upload an image to classify
+                                        </div>
+                                    );
+                                }
+                            })()}
+                        </div>
+                    </Container>
+                </Container>
+            </Col>
+
+            {/* <Col
                 class="gx-0"
                 style={{
                     paddingInline: "5vw",
@@ -182,7 +384,6 @@ export default function Model() {
                 }}
             >
                 <Card style={{ backgroundColor: "#FF8601" }}>
-                    {/* style={{ paddingTop: "10vh", paddingBottom: "10vh" }}> */}
                     <section>
                         <h1>Garbage Classifier Application</h1>
                         <p>
@@ -222,39 +423,7 @@ export default function Model() {
                         </div>
                     </Card>
                 </Card>
-            </Col>
-
-            {/* <Container>
-                <Row>
-                    {history.map((image) => (
-                        <Col>
-                            <div style={{ paddingTop: "10px" }}>
-                                <Card style={{ width: "18rem" }}>
-                                    <Card.Img
-                                        style={{
-                                            height: "100px",
-                                            width: "inherit",
-                                        }}
-                                        variant="top"
-                                        src={image}
-                                    />
-                                    <Card.Body>
-                                        <Card.Title>image</Card.Title>
-                                        <Card.Text> {image}</Card.Text>
-                                        <Button
-                                            href={image}
-                                            target="_black"
-                                            variant="primary"
-                                        >
-                                            View Image
-                                        </Button>
-                                    </Card.Body>
-                                </Card>
-                            </div>
-                        </Col>
-                    ))}
-                </Row>
-            </Container> */}
+            </Col> */}
         </Row>
     );
 }

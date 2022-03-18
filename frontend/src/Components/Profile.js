@@ -13,7 +13,7 @@ function Profile() {
     return (
         <div>
             <div>
-                <Row className=" mt-3 mb-5 gx-0">
+                <Row className=" mt-3 mb-3 gx-0">
                     <Container className="d-flex justify-content-left mb-2 px-0">
                         <Col className="px-3">
                             <h2>Welcome back {user.firstname} </h2>

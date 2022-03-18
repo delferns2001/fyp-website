@@ -3,6 +3,7 @@
 import axios from "axios";
 import { useContext } from "react";
 import { useState } from "react";
+import { Container } from "react-bootstrap";
 import {
     FormGroup,
     FormControl,
@@ -108,6 +109,11 @@ export default function CarbonFootprintCalc() {
 
     return (
         <>
+            <Container className="d-flex justify-content-center mb-5 px-0 mt-5">
+                <Col className="px-3" style={{ maxWidth: 540 }}>
+                    <h1 className="mb-0">Carbon Footprint Calculator</h1>
+                </Col>
+            </Container>
             <div
                 onSubmit={handleSubmit}
                 class="d-flex justify-content-center"

@@ -1,6 +1,4 @@
 import json
-from lib2to3.pgen2 import token
-from logging import exception
 from flask import Flask, request, jsonify
 from datetime import datetime, timedelta, timezone
 
@@ -9,7 +7,6 @@ import sqlalchemy
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from functools import wraps
 
 
 # https://dev.to/nagatodev/how-to-add-login-authentication-to-a-flask-and-react-application-23i7
@@ -106,7 +103,6 @@ def logout():
 @ app.after_request
 def refresh_expiring_jwts(response):
     try:
-        print("update")
         exp_timestamp = get_jwt()["exp"]
         now = datetime.now(timezone.utc)
         target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
@@ -118,7 +114,6 @@ def refresh_expiring_jwts(response):
                 response.data = json.dumps(data)
         return response
     except (RuntimeError, KeyError):
-        print("not updated")
         # Case where there is not a valid JWT. Just return the original respone
         return response
 

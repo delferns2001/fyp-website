@@ -44,13 +44,14 @@ export default function DisplayScannedStats() {
     return (
         <Row>
             <Col lg={4}>
+                <h5>Carbon Footprint Calculator </h5>
+
                 <Container
                     className="textcenter"
                     style={{
                         borderStyle: "solid",
                         height: "70vh",
                         display: "flex",
-                        // flexDirection: "column",
                         justifyContent: "center",
                         flexWrap: "wrap",
                     }}
@@ -79,6 +80,8 @@ export default function DisplayScannedStats() {
                 </Container>
             </Col>
             <Col lg={8}>
+                <h5>Materials Scanned So Far! </h5>
+
                 <Container
                     style={{
                         borderStyle: "solid",
@@ -90,13 +93,12 @@ export default function DisplayScannedStats() {
                 >
                     <div className="icon">
                         <img src="/glass.png" height="100vh"></img>
-                        <p className="textcenter"> GLASS = {stats.glass}</p>
+                        <p className="textcenter"> GLASS {stats.glass}</p>
                     </div>
 
                     <div className="icon">
                         <img src="/cardboard.png" height="100vh"></img>
                         <p className="textcenter">
-                            {" "}
                             CARDBOARD {stats.cardboard}
                         </p>
                     </div>
@@ -123,62 +125,5 @@ export default function DisplayScannedStats() {
                 </Container>
             </Col>
         </Row>
-
-        // <div>
-        //     <div
-        //         style={{
-        //             padding: "20px",
-        //         }}
-        //     >
-        //         <Card
-        //             style={{
-        //                 width: "40vw",
-        //                 backgroundColor: "#FF8601",
-        //             }}
-        //         >
-        //             {user.carbon_footprint_score === 0 ? (
-        //                 <p>
-        //                     You currently do not have a carbon footprint score{" "}
-        //                     <a
-        //                         style={{ color: "black" }}
-        //                         href="/carbonfootprintcalc"
-        //                     >
-        //                         click here to calculate it
-        //                     </a>
-        //                 </p>
-        //             ) : (
-        //                 <p>
-        //                     Previous Carbon Footprint Score:{" "}
-        //                     {user.carbon_footprint_score}
-        //                 </p>
-        //             )}
-        //         </Card>
-        //     </div>
-        //     <div
-        //         style={{
-        //             padding: "20px",
-        //         }}
-        //     >
-        //         <Card
-        //             style={{
-        //                 width: "40vw",
-        //                 backgroundColor: "#FF8601",
-        //             }}
-        //         >
-        //             <Card.Body>
-        //                 <h3>Scanned Materials: </h3>
-
-        //                 <div style={{ border: "10px", borderColor: "black" }}>
-        //                     <p> METAL {stats.metal}</p>
-        //                 </div>
-        //                 <p> GLASS {stats.glass}</p>
-        //                 <p> CARDBOARD {stats.cardboard}</p>
-        //                 <p> PAPER {stats.paper}</p>
-        //                 <p> TRASH {stats.trash}</p>
-        //                 <p> PLASTIC {stats.plastic}</p>
-        //             </Card.Body>
-        //         </Card>
-        //     </div>
-        // </div>
     );
 }
